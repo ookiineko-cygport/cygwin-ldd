@@ -1,6 +1,6 @@
-### mingw-ldd
+### cygwin-ldd
 
-Tool to list dependencies of a dll using python and winedump.
+Tool to list dependencies of a dll using python.
 
 Kudos to yan12125 for the original script:
 https://gist.github.com/yan12125/63c7241596e628553d21
@@ -8,16 +8,17 @@ https://gist.github.com/yan12125/63c7241596e628553d21
 ## Requirements
 
 - Python
-- wine
+- `pefile` package from pypi
 
 ## Usage
 
-    $ ./mingw-ldd.py /usr/i686-w64-mingw32/bin/libpng16-16.dll
-            libgcc_s_sjlj-1.dll => /usr/i686-w64-mingw32/bin/libgcc_s_sjlj-1.dll
+    $ ln -s cygwin-ldd.sh x86_64-pc-cygwin-ldd
+    $ ./x86_64-pc-cygwin-ldd /usr/x86_64-pc-cygwin/bin/cygc++-1.dll
+            cygwin1.dll => /usr/x86_64-pc-cygwin/bin/cygwin1.dll
             KERNEL32.dll => not found
-            msvcrt.dll => not found
-            libwinpthread-1.dll => /usr/i686-w64-mingw32/bin/libwinpthread-1.dll
-            zlib1.dll => /usr/i686-w64-mingw32/bin/zlib1.dll
+            ntdll.dll => not found
+            cygc++abi-1.dll => /usr/x86_64-pc-cygwin/bin/cygc++abi-1.dll
+            cygunwind-1.dll => /usr/x86_64-pc-cygwin/bin/cygunwind-1.dll
 
 ## See also
 

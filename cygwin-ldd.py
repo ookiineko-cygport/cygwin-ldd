@@ -3,7 +3,9 @@
 from __future__ import print_function
 import pefile
 import os
+import os.path
 import sys
+import re
 
 
 def get_dependency(filename):
@@ -14,11 +16,10 @@ def get_dependency(filename):
     return deps
 
 
-def dep_tree(root, prefix=None):
+def dep_tree(target, root, prefix=None):
     if not prefix:
-        arch = get_arch(root)
-        #print('Arch =', arch)
-        prefix = '/usr/'+arch+'-w64-mingw32/bin'
+        #print('Target =', target)
+        prefix = '/usr/'+target+'/bin'
         #print('Using default prefix', prefix)
     dep_dlls = dict()
 
@@ -37,18 +38,11 @@ def dep_tree(root, prefix=None):
     return (dep_dlls)
 
 
-def get_arch(filename):
-    type2arch= {pefile.OPTIONAL_HEADER_MAGIC_PE: 'i686',
-                pefile.OPTIONAL_HEADER_MAGIC_PE_PLUS: 'x86_64'}
-    pe = pefile.PE(filename)
-    try:
-        return type2arch[pe.PE_TYPE]
-    except KeyError:
-        sys.stderr.write('Error: unknown architecture')
-        sys.exit(1)
-
 if __name__ == '__main__':
+    if not (m := re.match('^(.*)-ldd$', os.path.basename(sys.argv[0]))):
+        raise ValueError('executable must be named ${TARGET}-ldd')
+    arch = m.groups()[0]
     filename = sys.argv[1]
-    for dll, full_path in dep_tree(filename).items():
+    for dll, full_path in dep_tree(arch, filename).items():
         print(' ' * 7, dll, '=>', full_path)
 
